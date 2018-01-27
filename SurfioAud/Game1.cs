@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;  
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SurfioAud.Waves;
@@ -28,12 +28,11 @@ namespace SurfioAud
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges();
             IsMouseVisible = true;
-            
+
             _waves = new CompositeWave(
-                new ScaledWave(new MovingWave(new SinWave(200), 200), 0.35),
-                new ScaledWave(new MovingWave(new SinWave(160), 170), 0.15),
-                new ScaledWave(new MovingWave(new SinWave(58), -25), 0.02),
-                new MovingWave(new LocalizedWave(new ConstantWave(5), -700, -600), 160)
+                new ScaledWave(new MovingWave(new SinWave(53), 60), 0.03),
+                new ScaledWave(new MovingWave(new SinWave(20), -25), 0.02),
+                new SmoothedWave(new MovingWave(new Microwave(), 200), 30)
             );
         }
         
@@ -50,7 +49,7 @@ namespace SurfioAud
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _waves.Update(1 / 60.0);
+            _waves.Update(1 / 60.0, 0);
 
             base.Update(gameTime);
         }

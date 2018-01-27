@@ -13,10 +13,10 @@
             _offset = 0;
         }
 
-        public void Update(double dt)
+        public void Update(double dt, double playerPosition)
         {
             _offset -= _speed * dt;
-            _wave.Update(dt);
+            _wave.Update(dt, playerPosition + _offset);
         }
 
         public double GetHeight(double x)

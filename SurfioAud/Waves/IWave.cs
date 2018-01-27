@@ -2,7 +2,7 @@
 {
     interface IWave
     {
-        void Update(double dt);
+        void Update(double dt, double playerPosition);
         double GetHeight(double x);
     }
 }

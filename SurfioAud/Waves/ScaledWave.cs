@@ -11,9 +11,9 @@
             _scale = scale;
         }
 
-        public void Update(double dt)
+        public void Update(double dt, double playerPosition)
         {
-            _baseWave.Update(dt);
+            _baseWave.Update(dt, playerPosition);
         }
 
         public double GetHeight(double x)

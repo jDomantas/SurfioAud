@@ -27,7 +27,7 @@
             return _position[temp];
         }
 
-        public void Update(double _)
+        public void Update(double _, double playerPosition)
         {
             const int passes = 4;
 

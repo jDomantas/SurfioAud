@@ -11,7 +11,7 @@ namespace SurfioAud.Waves
             _period = period;
         }
 
-        public void Update(double dt)
+        public void Update(double dt, double playerPosition)
         {
         }
 

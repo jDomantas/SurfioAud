@@ -11,11 +11,11 @@ namespace SurfioAud.Waves
             _parts = parts;
         }
 
-        public void Update(double dt)
+        public void Update(double dt, double playerPosition)
         {
             foreach (IWave wave in _parts)
             {
-                wave.Update(dt);
+                wave.Update(dt, playerPosition);
             }
         }
 

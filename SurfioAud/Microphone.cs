@@ -33,7 +33,7 @@ namespace SurfioAud
         {
             if (!_startedWriting)
             {
-                _writePosition = 4410;
+                _writePosition = 2205;
                 _startedWriting = true;
             }
 
@@ -62,7 +62,7 @@ namespace SurfioAud
                 _readPosition %= _buffer.Length;
             }
 
-            return total;
+            return total / 50;
         }
     }
 }
