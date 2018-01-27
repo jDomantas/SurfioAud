@@ -30,10 +30,10 @@ namespace SurfioAud
             graphics.ApplyChanges();
             IsMouseVisible = true;
 
-            _waves = new Wavess(); new CompositeWaves(
-                new ScaledWaves(new SinWaves(200, 200), 0.35),
-                new ScaledWaves(new SinWaves(160, 170), 0.15),
-                new ScaledWaves(new SinWaves(58, -25), 0.02)
+            _waves = new Wavess(); new CompositeWave(
+                new ScaledWave(new SinWave(200, 200), 0.35),
+                new ScaledWave(new SinWave(160, 170), 0.15),
+                new ScaledWave(new SinWave(58, -25), 0.02)
             );
         }
         

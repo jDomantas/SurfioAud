@@ -2,13 +2,13 @@
 
 namespace SurfioAud.Waves
 {
-    class SinWaves : IWaves
+    class SinWave : IWave
     {
         private readonly double _period;
         private readonly double _speed;
         private double _offset;
 
-        public SinWaves(double period, double speed)
+        public SinWave(double period, double speed)
         {
             _period = period;
             _speed = speed;

@@ -1,6 +1,6 @@
 ﻿namespace SurfioAud.Waves
 {
-    interface IWaves
+    interface IWave
     {
         void Update(double dt);
         double GetHeight(int x);
