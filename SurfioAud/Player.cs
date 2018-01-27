@@ -40,7 +40,7 @@ namespace SurfioAud
             else if (prev > next)
             {
                 double k = dt * 20;
-                double t = (prev - next) * dt * 1000;
+                double t = (prev - next) * dt * 750;
                 if (t > _velocity.X)
                 {
                     _velocity.X = _velocity.X * (1 - k) + k * t;
