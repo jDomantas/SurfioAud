@@ -85,3 +85,9 @@
 /processorParam:TextureFormat=Color
 /build:revspritesheet.png
 
+#begin static.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:static.fx
+
