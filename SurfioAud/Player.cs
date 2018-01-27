@@ -7,7 +7,7 @@ namespace SurfioAud
 {
     class Player
     {
-        private const double HalfInterval = 10;
+        private const double HalfInterval = 30;
 
         public Vector Position => _position;
         private Vector _position;
@@ -39,15 +39,13 @@ namespace SurfioAud
             }
             else if (prev > next)
             {
-                double k = dt * 20;
-                double t = (prev - next) * dt * 750;
-                if (t > _velocity.X)
-                {
-                    _velocity.X = _velocity.X * (1 - k) + k * t;
-                }
+                double alpha = (prev - next) / (2 * HalfInterval);
+                double accel = 1000 * alpha / (alpha * alpha + 1);
+                _velocity.X += dt * accel;
+
             }
 
-            double reduce = 50 * dt;
+            double reduce = Math.Abs(_velocity.X) * dt * 0.75;
             if (_velocity.X > reduce)
             {
                 _velocity.X -= reduce;

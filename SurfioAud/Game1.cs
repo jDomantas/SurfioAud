@@ -32,7 +32,7 @@ namespace SurfioAud
             _waves = new ExpandedWave(new ScaledWave(new CompositeWave(
                 new ScaledWave(new MovingWave(new SinWave(200), 100), 0.1),
                 new ScaledWave(new MovingWave(new SinWave(100), -25), 0.05),
-                new SmoothedWave(new MovingWave(new Microwave(), 400), 30)
+                new SmoothedWave(new MovingWave(new Microwave(), 250), 30)
             ), 100), 2);
 
             _player = new Player(new Vector(0, 0));
