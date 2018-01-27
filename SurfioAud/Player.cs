@@ -26,11 +26,9 @@ namespace SurfioAud
             double next = wave.GetHeight(_position.X + HalfInterval);
             double water = (prev + next) / 2;
 
-            bool isInWater = _position.Y < water;
-            isInWater = false;
             _position.Y = water;
             _velocity.Y = 0;
-            if (isInWater != _wasInWater)
+            if (_wasInWater)
             {
                 _velocity.Y /= 2;
             }
@@ -70,7 +68,7 @@ namespace SurfioAud
             //_velocity /= Math.Pow(1.6, dt);
             _position += _velocity * dt;
 
-            _wasInWater = isInWater;
+            _wasInWater = false;
         }
 
         public void Draw(SpriteBatch sb, Vector camera)

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SurfioAud.Waves
 {
@@ -14,8 +10,9 @@ namespace SurfioAud.Waves
         
         private readonly Microphone _microphone;
         private double _unreadTime;
-        private double[] _buffer;
-        private double[] _buffer2, _buffer3;
+        private readonly double[] _buffer;
+        private readonly double[] _buffer2;
+        private readonly double[] _buffer3;
 
 
         public Microwave()
@@ -51,12 +48,12 @@ namespace SurfioAud.Waves
 
         private void Smooth()
         {
-            const int SmoothDistance = 50;
+            const int smoothDistance = 50;
 
             for (int i = 0; i < BufferSize; i++)
             {
                 _buffer2[i] = 0;
-                for (int j = 0; j < SmoothDistance; j++)
+                for (int j = 0; j < smoothDistance; j++)
                 {
                     _buffer2[i] = Math.Max(_buffer2[i], GetAt(_buffer, i - j));
                 }
@@ -65,11 +62,11 @@ namespace SurfioAud.Waves
             for (int i = 0; i < BufferSize; i++)
             {
                 _buffer3[i] = 0;
-                for (int j = 0; j < SmoothDistance; j++)
+                for (int j = 0; j < smoothDistance; j++)
                 {
                     _buffer3[i] += GetAt(_buffer2, i - j);
                 }
-                _buffer3[i] /= SmoothDistance;
+                _buffer3[i] /= smoothDistance;
             }
         }
         

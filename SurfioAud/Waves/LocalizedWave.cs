@@ -24,7 +24,6 @@ namespace SurfioAud.Waves
         {
             double halfFidth = (_end - _start) / 2;
             double middle = (_start + _end) / 2;
-            double baseWave = _wave.GetHeight(x);
             double dist = Math.Abs(x - middle);
             return S(4 - dist / halfFidth * 4) * _wave.GetHeight(x);
         }

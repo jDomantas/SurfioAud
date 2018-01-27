@@ -1,16 +1,10 @@
 ﻿using NAudio.Wave;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SurfioAud
 {
     class Microphone
     {
-        private readonly WaveIn _input;
         private readonly float[] _buffer;
         private int _readPosition;
         private int _writePosition;
@@ -18,12 +12,12 @@ namespace SurfioAud
 
         public Microphone()
         {
-            _input = new WaveIn
+            var input = new WaveIn
             {
                 WaveFormat = new WaveFormat(44100, 1)
             };
-            _input.DataAvailable += DataAvailable;
-            _input.StartRecording();
+            input.DataAvailable += DataAvailable;
+            input.StartRecording();
 
             _buffer = new float[44100];
             _startedWriting = false;
