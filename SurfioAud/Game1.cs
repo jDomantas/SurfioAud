@@ -10,9 +10,14 @@ namespace SurfioAud
     {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+       
         private IWave _waves;
         private Texture2D _pixel;
+        int tick;
+        Microphone _mic;
+
+        float[] values;
+        int nextPos;
 
         public Game1()
         {
@@ -28,13 +33,17 @@ namespace SurfioAud
             _graphics.PreferredBackBufferHeight = 900;
             _graphics.ApplyChanges();
             IsMouseVisible = true;
-
-//            _waves = new SimulatedWave();
+            
             _waves = new CompositeWave(
                 new ScaledWave(new MovingWave(new SinWave(200), 200), 0.35),
                 new ScaledWave(new MovingWave(new SinWave(160), 170), 0.15),
                 new ScaledWave(new MovingWave(new SinWave(58), -25), 0.02)
             );
+
+            _mic = new Microphone();
+
+            values = new float[180];
+            nextPos = 0;
         }
         
         protected override void LoadContent()
@@ -49,27 +58,23 @@ namespace SurfioAud
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            _waves.Update(1 / 60.0);
-
-//            if (tick++ % 180 == 0)
-//                _waves.Splash();
+            
+            values[nextPos++] = _mic.GetTickValue();
+            nextPos %= 180;
             base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            const double baseHeight = 450;
-            const double scale = 30;
-
+            
             _spriteBatch.Begin();
-
-            for (int i = 0; i < 800; i++)
+            
+            for (int i = 0; i < 180; i++)
             {
-                int start = (int)Math.Round(baseHeight - scale * _waves.GetHeight(i));
-                _spriteBatch.Draw(_pixel, new Rectangle(i * 2, start, 2, 900 - start), Color.White);
+                int pos = (nextPos + i) % 180;
+                int h = (int)Math.Round(values[pos] / 1000 * 450);
+                _spriteBatch.Draw(_pixel, new Rectangle(i * 8 + 40, 450 - h, 8, h), Color.White);
             }
 
             _spriteBatch.End();
