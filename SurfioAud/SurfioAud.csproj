@@ -46,6 +46,11 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Waves.cs" />
+    <Compile Include="Waves\CompositeWaves.cs" />
+    <Compile Include="Waves\IWaves.cs" />
+    <Compile Include="Waves\ScaledWaves.cs" />
+    <Compile Include="Waves\SinWaves.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
