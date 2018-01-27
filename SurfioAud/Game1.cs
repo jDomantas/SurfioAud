@@ -8,16 +8,15 @@ namespace SurfioAud
 {
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
 
-        IWave _waves;
-        Texture2D _pixel;
-        int tick;
+        private IWave _waves;
+        private Texture2D _pixel;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
  
@@ -25,9 +24,9 @@ namespace SurfioAud
         {
             base.Initialize();
 
-            graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferHeight = 900;
-            graphics.ApplyChanges();
+            _graphics.PreferredBackBufferWidth = 1600;
+            _graphics.PreferredBackBufferHeight = 900;
+            _graphics.ApplyChanges();
             IsMouseVisible = true;
 
 //            _waves = new SimulatedWave();
@@ -40,10 +39,10 @@ namespace SurfioAud
         
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
-            _pixel.SetData(new Color[] { Color.White });
+            _pixel.SetData(new[] { Color.White });
         }
         
         protected override void Update(GameTime gameTime)
@@ -62,18 +61,18 @@ namespace SurfioAud
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            const double BaseHeight = 450;
-            const double Scale = 30;
+            const double baseHeight = 450;
+            const double scale = 30;
 
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
 
             for (int i = 0; i < 800; i++)
             {
-                int start = (int)Math.Round(BaseHeight - Scale * _waves.GetHeight(i));
-                spriteBatch.Draw(_pixel, new Rectangle(i * 2, start, 2, 900 - start), Color.White);
+                int start = (int)Math.Round(baseHeight - scale * _waves.GetHeight(i));
+                _spriteBatch.Draw(_pixel, new Rectangle(i * 2, start, 2, 900 - start), Color.White);
             }
 
-            spriteBatch.End();
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
