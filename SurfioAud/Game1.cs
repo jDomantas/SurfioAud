@@ -10,17 +10,21 @@ namespace SurfioAud
     {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-       
+
         private IWave _waves;
         private Player _player;
         private RenderTarget2D _renderTarget;
-
+        private RenderTarget2D _waveRenderTarget;
+        private int _tick;
+        
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
+            _randomNumbers = new int[10000];
         }
  
         protected override void Initialize()
@@ -63,13 +67,25 @@ namespace SurfioAud
             Resources.Paralax1 = Content.Load<Texture2D>("parralax1");
             Resources.Paralax2 = Content.Load<Texture2D>("parrrlalal_2");
 
+            Resources.Static = new Texture2D(GraphicsDevice, 1, 4096);
+            var colors = new Color[Resources.Static.Height];
+            var rnd = new Random(0);
+            for (int i = 0; i < colors.Length; i++)
+            {
+                colors[i] = (rnd.Next(2) == 0) ? Color.White : Color.Black;
+            }
+            Resources.Static.SetData(colors);
+
             _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+            _waveRenderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
         }
         
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            _tick++;
 
             double dt = 1 / 90.0;
             _waves.Update(dt, _player.Position.X);
@@ -82,35 +98,52 @@ namespace SurfioAud
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            Vector camera = new Vector(_player.Position.X - 250, 1080 * 0.75);
+
+            GraphicsDevice.SetRenderTarget(_waveRenderTarget);
+            GraphicsDevice.Clear(new Color(0, 0, 0, 0));
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            DrawWaves(camera);
+            _spriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
+
             GraphicsDevice.SetRenderTarget(_renderTarget);
             _spriteBatch.Begin();
-            DrawGame();
+            DrawGame(camera);
             _spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(_renderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
             _spriteBatch.End();
-            
+
+            _spriteBatch.Begin();
+            //_spriteBatch.Draw(_waveRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.Black * 0.7f);
+            _spriteBatch.Draw(_waveRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White * 0.3f);
+            _spriteBatch.End();
+
             base.Draw(gameTime);
         }
 
-        private void DrawGame()
+        private void DrawGame(Vector camera)
         {
-            Vector camera = new Vector(_player.Position.X - 250, 1080 * 0.75);
             DrawBackground(camera);
-            DrawWaves(camera);
+            // DrawWaves(camera);
             _player.Draw(_spriteBatch, camera);
         }
 
         private void DrawWaves(Vector camera)
         {
+            var rnd = new Random(_tick);
             for (int i = 0; i < 1920 / 2; i++)
             {
                 double wave = _waves.GetHeight(camera.X + i * 2);
                 double freeSpace = camera.Y - wave;
                 int h = (int)Math.Round(freeSpace);
-                _spriteBatch.Draw(Resources.Pixel, new Rectangle(i * 2, h, 2, 1080 - h), Color.White);
+                int startH = rnd.Next(2503);
+                int texH = (1080 - h + 1) / 2;
+
+                _spriteBatch.Draw(Resources.Static, new Rectangle(i * 2, h, 2, texH * 2), new Rectangle(0, startH, 1, texH), Color.White);
             }
         }
 
