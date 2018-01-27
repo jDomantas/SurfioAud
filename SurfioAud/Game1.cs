@@ -57,6 +57,8 @@ namespace SurfioAud
             Resources.Pixel = new Texture2D(GraphicsDevice, 1, 1);
             Resources.Pixel.SetData(new[] { Color.White });
             Resources.Player = Content.Load<Texture2D>("sprit");
+            Resources.PlayerForward = Content.Load<Texture2D>("fwdspritesheet");
+            Resources.PlayerBackward = Content.Load<Texture2D>("revspritesheet");
             Resources.Background = Content.Load<Texture2D>("background");
             Resources.Paralax1 = Content.Load<Texture2D>("parralax1");
             Resources.Paralax2 = Content.Load<Texture2D>("parrrlalal_2");
