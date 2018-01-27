@@ -16,7 +16,7 @@
             _baseWave.Update(dt);
         }
 
-        public double GetHeight(int x)
+        public double GetHeight(double x)
         {
             return _baseWave.GetHeight(x) * _scale;
         }

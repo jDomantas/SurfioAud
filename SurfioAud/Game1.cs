@@ -11,7 +11,7 @@ namespace SurfioAud
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Wavess _waves;
+        IWave _waves;
         Texture2D _pixel;
         int tick;
 
@@ -30,10 +30,11 @@ namespace SurfioAud
             graphics.ApplyChanges();
             IsMouseVisible = true;
 
-            _waves = new Wavess(); new CompositeWave(
-                new ScaledWave(new SinWave(200, 200), 0.35),
-                new ScaledWave(new SinWave(160, 170), 0.15),
-                new ScaledWave(new SinWave(58, -25), 0.02)
+//            _waves = new Wavess();
+            _waves = new CompositeWave(
+                new ScaledWave(new MovingWave(new SinWave(200), 200), 0.35),
+                new ScaledWave(new MovingWave(new SinWave(160), 170), 0.15),
+                new ScaledWave(new MovingWave(new SinWave(58), -25), 0.02)
             );
         }
         
@@ -52,8 +53,8 @@ namespace SurfioAud
 
             _waves.Update(1 / 60.0);
 
-            if (tick++ % 180 == 0)
-                _waves.Splash();
+//            if (tick++ % 180 == 0)
+//                _waves.Splash();
             base.Update(gameTime);
         }
         

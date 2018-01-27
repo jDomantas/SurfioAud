@@ -19,7 +19,7 @@ namespace SurfioAud.Waves
             }
         }
 
-        public double GetHeight(int x)
+        public double GetHeight(double x)
         {
             return _parts.Sum(t => t.GetHeight(x));
         }

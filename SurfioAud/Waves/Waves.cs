@@ -1,6 +1,6 @@
-﻿namespace SurfioAud
+﻿namespace SurfioAud.Waves
 {
-    class Wavess
+    class SimulatedWave : IWave
     {
         private const int Width = 800;
         private const double Dampening = 0.011;
@@ -11,7 +11,7 @@
         private readonly double[] _speed;
         private readonly double[] _lDeltas, _rDeltas;
         
-        public Wavess()
+        public SimulatedWave()
         {
             _position = new double[Width];
             _speed = new double[Width];
@@ -19,23 +19,24 @@
             _rDeltas = new double[Width];
         }
 
-        public double GetHeight(int x)
+        public double GetHeight(double x)
         {
-            return _position[x];
+            int temp = (int) x;
+            return _position[temp];
         }
 
         public void Update(double _)
         {
-            const int Passes = 4;
+            const int passes = 4;
 
             // do some passes where columns pull on their neighbours
-            for (int j = 0; j < Passes; j++)
+            for (int j = 0; j < passes; j++)
             {
                 for (int i = 0; i < Width; i++)
                 {
                     double x = -_position[i];
-                    _speed[i] += (Tension * x - _speed[i] * Dampening) / Passes;
-                    _position[i] += _speed[i] / Passes;
+                    _speed[i] += (Tension * x - _speed[i] * Dampening) / passes;
+                    _position[i] += _speed[i] / passes;
                 }
 
                 for (int i = 0; i < Width; i++)

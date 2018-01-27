@@ -49,6 +49,8 @@
     <Compile Include="Waves.cs" />
     <Compile Include="Waves\CompositeWave.cs" />
     <Compile Include="Waves\IWave.cs" />
+    <Compile Include="Waves\LocalizedWave.cs" />
+    <Compile Include="Waves\MovingWave.cs" />
     <Compile Include="Waves\ScaledWave.cs" />
     <Compile Include="Waves\SinWave.cs" />
   </ItemGroup>

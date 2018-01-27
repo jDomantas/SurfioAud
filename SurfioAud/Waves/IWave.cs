@@ -3,6 +3,6 @@
     interface IWave
     {
         void Update(double dt);
-        double GetHeight(int x);
+        double GetHeight(double x);
     }
 }
