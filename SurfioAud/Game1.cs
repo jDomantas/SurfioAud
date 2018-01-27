@@ -30,8 +30,8 @@ namespace SurfioAud
             IsMouseVisible = true;
 
             _waves = new ExpandedWave(new ScaledWave(new CompositeWave(
-                new ScaledWave(new MovingWave(new SinWave(47), 60), 0.03),
-                new ScaledWave(new MovingWave(new SinWave(20), -25), 0.02),
+                new ScaledWave(new MovingWave(new SinWave(200), 100), 0.1),
+                new ScaledWave(new MovingWave(new SinWave(100), -25), 0.05),
                 new SmoothedWave(new MovingWave(new Microwave(), 200), 30)
             ), 100), 2);
 
