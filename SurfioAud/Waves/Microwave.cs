@@ -8,6 +8,7 @@ namespace SurfioAud.Waves
 {
     class Microwave : IWave
     {
+        private const double AmplitudeReduction = 1.25;
         private const double DistanceFromPlayer = 180;
         private const int BufferSize = 3000;
         
@@ -28,6 +29,12 @@ namespace SurfioAud.Waves
 
         public void Update(double dt, double playerPosition)
         {
+            double mul = 1 / Math.Pow(AmplitudeReduction, dt);
+            for (int i = 0; i < BufferSize; i++)
+            {
+                _buffer[i] *= mul;
+            }
+
             _unreadTime += dt;
             while (_unreadTime > 1 / 60.0)
             {
