@@ -30,7 +30,7 @@ namespace SurfioAud
             graphics.ApplyChanges();
             IsMouseVisible = true;
 
-//            _waves = new Wavess();
+//            _waves = new SimulatedWave();
             _waves = new CompositeWave(
                 new ScaledWave(new MovingWave(new SinWave(200), 200), 0.35),
                 new ScaledWave(new MovingWave(new SinWave(160), 170), 0.15),

@@ -46,7 +46,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Waves.cs" />
+    <Compile Include="Waves\Waves.cs" />
     <Compile Include="Waves\CompositeWave.cs" />
     <Compile Include="Waves\IWave.cs" />
     <Compile Include="Waves\LocalizedWave.cs" />
