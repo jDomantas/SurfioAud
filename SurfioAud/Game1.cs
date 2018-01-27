@@ -12,7 +12,7 @@ namespace SurfioAud
         private SpriteBatch _spriteBatch;
        
         private IWave _waves;
-        private Texture2D _pixel;
+        private Player _player;
 
         public Game1()
         {
@@ -29,19 +29,21 @@ namespace SurfioAud
             _graphics.ApplyChanges();
             IsMouseVisible = true;
 
-            _waves = new CompositeWave(
-                new ScaledWave(new MovingWave(new SinWave(53), 60), 0.03),
-                new ScaledWave(new MovingWave(new SinWave(20), -25), 0.02),
-                new SmoothedWave(new MovingWave(new Microwave(), 200), 30)
-            );
+            _waves = new ScaledWave(new CompositeWave(
+                new ScaledWave(new MovingWave(new SinWave(94), 120), 0.03),
+                new ScaledWave(new MovingWave(new SinWave(40), -50), 0.02),
+                new SmoothedWave(new MovingWave(new Microwave(), 400), 30)
+            ), 50);
+
+            _player = new Player(new Vector(0, 0));
         }
         
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _pixel = new Texture2D(GraphicsDevice, 1, 1);
-            _pixel.SetData(new[] { Color.White });
+            Resources.Pixel = new Texture2D(GraphicsDevice, 1, 1);
+            Resources.Pixel.SetData(new[] { Color.White });
         }
         
         protected override void Update(GameTime gameTime)
@@ -49,7 +51,8 @@ namespace SurfioAud
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _waves.Update(1 / 60.0, 0);
+            _waves.Update(1 / 60.0, _player.Position.X);
+            _player.Update(1 / 60.0, _waves);
 
             base.Update(gameTime);
         }
@@ -59,16 +62,25 @@ namespace SurfioAud
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             _spriteBatch.Begin();
-            
-            for (int i = 0; i < 800; i++)
-            {
-                int h = (int)Math.Round(_waves.GetHeight(i) * 50 + 450);
-                _spriteBatch.Draw(_pixel, new Rectangle(i * 2, 900 - h, 2, h), Color.White);
-            }
+
+            Vector camera = new Vector(_player.Position.X - 150, _graphics.PreferredBackBufferHeight * 0.5);
+            RenderWaves(camera);
+            _player.Draw(_spriteBatch, camera);
 
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void RenderWaves(Vector camera)
+        {
+            for (int i = 0; i < 800; i++)
+            {
+                double wave = _waves.GetHeight(camera.X + i * 2);
+                double freeSpace = camera.Y - wave;
+                int h = (int)Math.Round(freeSpace);
+                _spriteBatch.Draw(Resources.Pixel, new Rectangle(i * 2, h, 2, _graphics.PreferredBackBufferHeight - h), Color.White);
+            }
         }
     }
 }
