@@ -50,6 +50,7 @@
     <Compile Include="Microphone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Waves\ConstantWave.cs" />
     <Compile Include="Waves\SimulatedWave.cs" />
     <Compile Include="Waves\CompositeWave.cs" />
     <Compile Include="Waves\IWave.cs" />

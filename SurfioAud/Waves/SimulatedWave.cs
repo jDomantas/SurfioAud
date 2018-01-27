@@ -22,6 +22,8 @@
         public double GetHeight(double x)
         {
             int temp = (int) x;
+            if (temp < 0 || temp >= _position.Length)
+                return 0;
             return _position[temp];
         }
 

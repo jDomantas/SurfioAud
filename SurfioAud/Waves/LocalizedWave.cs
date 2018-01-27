@@ -1,4 +1,6 @@
-﻿namespace SurfioAud.Waves
+﻿using System;
+
+namespace SurfioAud.Waves
 {
     class LocalizedWave : IWave
     {
@@ -20,11 +22,16 @@
 
         public double GetHeight(double x)
         {
-            if (x <= _start || x >= _end)
-            {
-                return 0;
-            }
-            return _wave.GetHeight(x);
+            double halfFidth = (_end - _start) / 2;
+            double middle = (_start + _end) / 2;
+            double baseWave = _wave.GetHeight(x);
+            double dist = Math.Abs(x - middle);
+            return S(4 - dist / halfFidth * 4) * _wave.GetHeight(x);
+        }
+
+        private double S(double x)
+        {
+            return Math.Exp(x) / (Math.Exp(x) + 1);
         }
     }
 }

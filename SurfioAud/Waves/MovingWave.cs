@@ -15,7 +15,7 @@
 
         public void Update(double dt)
         {
-            _offset += _speed * dt;
+            _offset -= _speed * dt;
             _wave.Update(dt);
         }
 
