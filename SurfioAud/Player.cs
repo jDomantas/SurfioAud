@@ -12,7 +12,6 @@ namespace SurfioAud
         public Vector Position => _position;
         private Vector _position;
         private Vector _velocity;
-        private bool _wasInWater;
 
         public Player(Vector position)
         {
@@ -28,10 +27,6 @@ namespace SurfioAud
 
             _position.Y = water;
             _velocity.Y = 0;
-            if (_wasInWater)
-            {
-                _velocity.Y /= 2;
-            }
 
             if (_position.Y < water - 20)
             {
@@ -67,8 +62,6 @@ namespace SurfioAud
             }
             //_velocity /= Math.Pow(1.6, dt);
             _position += _velocity * dt;
-
-            _wasInWater = false;
         }
 
         public void Draw(SpriteBatch sb, Vector camera)
