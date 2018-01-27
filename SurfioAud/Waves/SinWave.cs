@@ -11,9 +11,9 @@ namespace SurfioAud.Waves
             _period = period;
         }
 
-        public void Update(double dt, double playerPosition)
-        {
-        }
+        public void Update(double dt, double playerPosition) { }
+
+        public void MakeSplash(double position) { }
 
         public double GetHeight(double x)
         {

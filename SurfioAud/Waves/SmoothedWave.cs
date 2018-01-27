@@ -18,6 +18,11 @@ namespace SurfioAud.Waves
             _wave.Update(dt, playerPosition);
         }
 
+        public void MakeSplash(double position)
+        {
+            _wave.MakeSplash(position);
+        }
+
         public double GetHeight(double x)
         {
             double total = 0;

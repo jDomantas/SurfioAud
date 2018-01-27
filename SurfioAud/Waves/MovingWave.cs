@@ -19,6 +19,11 @@
             _wave.Update(dt, playerPosition + _offset);
         }
 
+        public void MakeSplash(double position)
+        {
+            _wave.MakeSplash(position + _offset);
+        }
+
         public double GetHeight(double x)
         {
             return _wave.GetHeight(_offset + x);

@@ -50,6 +50,7 @@ namespace SurfioAud
             _waves = new ExpandedWave(new ScaledWave(new CompositeWave(
                 new ScaledWave(new MovingWave(new SinWave(200), 100), 0.1),
                 new ScaledWave(new MovingWave(new SinWave(100), -25), 0.05),
+                new MovingWave(new ScaledWave(new SimulatedWave(), 0.1), 100),
                 new SmoothedWave(new MovingWave(new Microwave(), 350), 30)
             ), 100), 2);
 
@@ -128,11 +129,8 @@ namespace SurfioAud
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(_renderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
-            _spriteBatch.End();
-
-            _spriteBatch.Begin();
-            //_spriteBatch.Draw(_waveRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.Black * 0.7f);
             _spriteBatch.Draw(_waveRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White * 0.3f);
+            Microphone.DrawDebugInfo(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

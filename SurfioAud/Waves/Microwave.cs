@@ -51,6 +51,8 @@ namespace SurfioAud.Waves
             }
         }
 
+        public void MakeSplash(double position) { }
+
         private void Smooth()
         {
             const int smoothDistance = 50;

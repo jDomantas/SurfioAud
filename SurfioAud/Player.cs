@@ -16,6 +16,9 @@ namespace SurfioAud
         private double _angle;
         private double _frameTimeLeft;
         private int _currentFrame;
+        private bool _wasInWater;
+        private bool _snapped;
+        private double _keepSnap;
 
         public Player(Vector position)
         {
@@ -24,41 +27,108 @@ namespace SurfioAud
             _angle = 0;
             _currentFrame = 0;
             _frameTimeLeft = 0;
+            _wasInWater = false;
+            _snapped = true;
         }
 
         public void Update(double dt, IWave wave)
         {
             double prev = wave.GetHeight(_position.X - HalfInterval);
             double next = wave.GetHeight(_position.X + HalfInterval);
-            double water = (prev + next) / 2;
-            _angle = Math.Atan2(prev - next, HalfInterval * 2);
+            double water = wave.GetHeight(_position.X);
 
-            _position.Y = wave.GetHeight(_position.X);
-            _velocity.Y = 0;
+            bool isInWater = _position.Y < water;
 
-            if (_position.Y < water - 20)
+            if (!_snapped)
             {
-                _velocity.Y += dt * 1000;
-                _velocity.Y /= Math.Pow(1.2, dt);
-            }
-            else if (_position.Y > water + 20)
-            {
-                _velocity.Y -= dt * 1000;
-            }
-            else if (prev > next)
-            {
-                double alpha = (prev - next) / (2 * HalfInterval);
-                double accel = 1000 * alpha / (alpha * alpha + 1);
-                _velocity.X += dt * accel;
+                double rot = dt * 3;
+                if (_angle < -rot)
+                {
+                    _angle += rot;
+                }
+                else if (_angle > rot)
+                {
+                    _angle -= rot;
+                }
+                else
+                {
+                    _angle = 0;
+                }
+            } 
 
+            if (_keepSnap >= 0)
+            {
+                _keepSnap -= dt;
             }
 
+            if (_snapped && prev < next - 80 && _keepSnap <= 0)
+            {
+                _snapped = false;
+            }
+
+            if (_snapped)
+            {
+                double newVelY = (water - _position.Y) / dt;
+                if (newVelY < _velocity.Y - 80 && _keepSnap <= 0)
+                {
+                    _snapped = false;
+                    _keepSnap = 0.15;
+                }
+                else
+                {
+                    _velocity.Y = newVelY;
+                }
+
+                if (prev > next)
+                {
+                    _angle = Math.Atan2(prev - next, HalfInterval * 2);
+                    double alpha = (prev - next) / (2 * HalfInterval);
+                    double accelX = 1000 * alpha / (alpha * alpha + 1);
+                    _velocity.X += dt * accelX;
+                }
+            }
+            else
+            {
+                if (isInWater != _wasInWater)
+                {
+                    if (!_wasInWater)
+                    {
+                        wave.MakeSplash(_position.X);
+                    }
+                    _velocity.Y /= 3;
+                    _wasInWater = isInWater;
+                }
+
+                if (_position.Y < water - 20)
+                {
+                    _velocity.Y += dt * 1300;
+                    _velocity.Y /= Math.Pow(1.2, dt);
+                }
+                else if (_position.Y > water + 20)
+                {
+                    _velocity.Y -= dt * 1000;
+                }
+
+                if (_velocity.Y > 0 && Math.Abs(water - _position.Y) < 10 && _wasInWater && _keepSnap <= 0)
+                {
+                    _position.Y = water;
+                    _velocity.Y = 0;
+                    _snapped = true;
+                    _keepSnap = 0.3;
+                }
+            }
+            
             double reduce = Math.Abs(_velocity.X) * dt * 0.45;
+            if (!_snapped && _position.Y > water)
+            {
+                reduce = 0;
+            }
+ 
             if (_velocity.X > reduce)
             {
                 _velocity.X -= reduce;
             }
-            else if (_velocity.X < reduce)
+            else if (_velocity.X < -reduce)
             {
                 _velocity.X += reduce;
             }
@@ -70,6 +140,10 @@ namespace SurfioAud
             _position += _velocity * dt;
 
             int targetFrame = Math.Min(13, Math.Max(-13, (int)Math.Round(_angle * 13)));
+            if (!_snapped)
+            {
+                targetFrame = -11;
+            }
             if (targetFrame < -2)
             {
                 targetFrame += 2;
@@ -127,6 +201,7 @@ namespace SurfioAud
                 tex = Resources.PlayerForward;
             }
             sb.Draw(tex, new Rectangle(x, y, 250, 250), new Rectangle(sx, sy, 250, 250), Color.White, (float)_angle, new Vector2(125, 185), SpriteEffects.None, 0);
+            sb.Draw(Resources.Pixel, new Rectangle(x - 5, y - 5, 10, 10), Color.Red);
         }
     }
 }

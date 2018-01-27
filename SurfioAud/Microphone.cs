@@ -1,17 +1,25 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using NAudio.Wave;
 using System;
 
 namespace SurfioAud
 {
     class Microphone
     {
+        private static Microphone _aHorribleHack;
+
         private readonly float[] _buffer;
         private int _readPosition;
         private int _writePosition;
         private bool _startedWriting;
+        private float[] _infoRead;
+        private int _infoNextPos;
 
         public Microphone()
         {
+            _aHorribleHack = this;
+
             var input = new WaveIn
             {
                 WaveFormat = new WaveFormat(44100, 1)
@@ -21,6 +29,7 @@ namespace SurfioAud
 
             _buffer = new float[44100];
             _startedWriting = false;
+            _infoRead = new float[60 * 5];
         }
 
         private void DataAvailable(object sender, WaveInEventArgs e)
@@ -56,7 +65,24 @@ namespace SurfioAud
                 _readPosition %= _buffer.Length;
             }
 
-            return total / 50;
+            total /= 25;
+            _infoRead[_infoNextPos++] = total;
+            _infoNextPos %= _infoRead.Length;
+            return total;
+        }
+
+        public static void DrawDebugInfo(SpriteBatch sb)
+        {
+            if (_aHorribleHack == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _aHorribleHack._infoRead.Length; i++)
+            {
+                float value = _aHorribleHack._infoRead[(_aHorribleHack._infoNextPos + i) % _aHorribleHack._infoRead.Length];
+                sb.Draw(Resources.Pixel, new Rectangle(i * 2, 0, 2, (int)(value * 100)), Color.White);
+            }
         }
     }
 }

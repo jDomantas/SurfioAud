@@ -11,6 +11,8 @@
 
         public void Update(double dt, double playerPosition) { }
 
+        public void MakeSplash(double potition) { }
+
         public double GetHeight(double x)
         {
             return _value;

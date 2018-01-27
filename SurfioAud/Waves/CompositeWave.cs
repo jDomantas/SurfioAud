@@ -19,6 +19,14 @@ namespace SurfioAud.Waves
             }
         }
 
+        public void MakeSplash(double position)
+        {
+            foreach (IWave wave in _parts)
+            {
+                wave.MakeSplash(position);
+            }
+        }
+
         public double GetHeight(double x)
         {
             return _parts.Sum(t => t.GetHeight(x));

@@ -20,6 +20,11 @@ namespace SurfioAud.Waves
             _wave.Update(dt, playerPosition);
         }
 
+        public void MakeSplash(double position)
+        {
+            _wave.MakeSplash(position);
+        }
+
         public double GetHeight(double x)
         {
             double halfFidth = (_end - _start) / 2;
