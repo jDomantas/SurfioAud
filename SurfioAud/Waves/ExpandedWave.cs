@@ -19,7 +19,7 @@ namespace SurfioAud.Waves
 
         public void Update(double dt, double playerPosition)
         {
-            _wave.Update(dt, playerPosition * _scale);
+            _wave.Update(dt, playerPosition / _scale);
         }
 
         public double GetHeight(double x)
