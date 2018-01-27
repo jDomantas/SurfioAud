@@ -45,7 +45,7 @@ namespace SurfioAud
                 int low = e.Buffer[i * 2];
                 int high = e.Buffer[i * 2 + 1];
                 int val = low | (high << 8);
-                _buffer[_writePosition++] = val / 32768f;
+                _buffer[_writePosition++] = (short) val / 32768f;
                 _writePosition %= _buffer.Length;
             }
         }
