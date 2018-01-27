@@ -5,7 +5,7 @@ namespace SurfioAud.Waves
     class Microwave : IWave
     {
         private const double AmplitudeReduction = 1.25;
-        private const double DistanceFromPlayer = 180;
+        private const double DistanceFromPlayer = 250;
         private const int BufferSize = 3000;
         
         private readonly Microphone _microphone;
@@ -32,16 +32,21 @@ namespace SurfioAud.Waves
                 _buffer[i] *= mul;
             }
 
-            _unreadTime += dt;
+            bool gotChanges = false;
+            _unreadTime += 1 / 60.0;// dt;
             while (_unreadTime > 1 / 60.0)
             {
+                gotChanges = true;
                 _unreadTime -= 1 / 60.0;
                 playerPosition %= _buffer.Length;
                 int pos = (int)Math.Round(playerPosition - DistanceFromPlayer);
                 _buffer[(pos % _buffer.Length + _buffer.Length) % _buffer.Length] = _microphone.GetTickValue();
                 pos -= 500;
                 _buffer[(pos % _buffer.Length + _buffer.Length) % _buffer.Length] = 0;
-
+            }
+            
+            if (gotChanges)
+            {
                 Smooth();
             }
         }
