@@ -53,7 +53,7 @@ namespace SurfioAud
 
             }
 
-            double reduce = Math.Abs(_velocity.X) * dt * 0.75;
+            double reduce = Math.Abs(_velocity.X) * dt * 0.45;
             if (_velocity.X > reduce)
             {
                 _velocity.X -= reduce;
