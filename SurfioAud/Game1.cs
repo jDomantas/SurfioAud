@@ -29,11 +29,11 @@ namespace SurfioAud
             _graphics.ApplyChanges();
             IsMouseVisible = true;
 
-            _waves = new ScaledWave(new CompositeWave(
-                new ScaledWave(new MovingWave(new SinWave(94), 120), 0.03),
-                new ScaledWave(new MovingWave(new SinWave(40), -50), 0.02),
-                new SmoothedWave(new MovingWave(new Microwave(), 400), 30)
-            ), 50);
+            _waves = new ExpandedWave(new ScaledWave(new CompositeWave(
+                new ScaledWave(new MovingWave(new SinWave(47), 60), 0.03),
+                new ScaledWave(new MovingWave(new SinWave(20), -25), 0.02),
+                new SmoothedWave(new MovingWave(new Microwave(), 200), 30)
+            ), 100), 2);
 
             _player = new Player(new Vector(0, 0));
         }

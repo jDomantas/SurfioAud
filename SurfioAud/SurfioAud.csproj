@@ -54,6 +54,7 @@
     <Compile Include="Resources.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="Waves\ConstantWave.cs" />
+    <Compile Include="Waves\ExpandedWave.cs" />
     <Compile Include="Waves\Microwave.cs" />
     <Compile Include="Waves\SimulatedWave.cs" />
     <Compile Include="Waves\CompositeWave.cs" />

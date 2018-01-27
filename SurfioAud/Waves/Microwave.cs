@@ -8,7 +8,7 @@ namespace SurfioAud.Waves
 {
     class Microwave : IWave
     {
-        private const double DistanceFromPlayer = 250;
+        private const double DistanceFromPlayer = 180;
         private const int BufferSize = 3000;
         
         private readonly Microphone _microphone;
