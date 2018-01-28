@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace SurfioAud
 {
@@ -12,5 +13,7 @@ namespace SurfioAud
         public static Texture2D Paralax1;
         public static Texture2D Paralax2;
         public static Texture2D Static;
+
+        public static List<Obstacle> Obstacles = new List<Obstacle>();
     }
 }

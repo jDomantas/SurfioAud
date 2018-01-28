@@ -139,18 +139,18 @@ namespace SurfioAud
             
             _position += _velocity * dt;
 
-            int targetFrame = Math.Min(13, Math.Max(-13, (int)Math.Round(_angle * 13)));
+            int targetFrame = Math.Min(15, Math.Max(-15, (int)Math.Round(_angle * 15 * 1.2)));
             if (!_snapped)
             {
-                targetFrame = -11;
+                targetFrame = -15;
             }
-            if (targetFrame < -2)
+            if (targetFrame < -4)
             {
-                targetFrame += 2;
+                targetFrame += 4;
             }
-            else if (targetFrame > 2)
+            else if (targetFrame > 4)
             {
-                targetFrame -= 2;
+                targetFrame -= 4;
             }
             else
             {
@@ -201,7 +201,10 @@ namespace SurfioAud
                 tex = Resources.PlayerForward;
             }
             sb.Draw(tex, new Rectangle(x, y, 250, 250), new Rectangle(sx, sy, 250, 250), Color.White, (float)_angle, new Vector2(125, 185), SpriteEffects.None, 0);
-            sb.Draw(Resources.Pixel, new Rectangle(x - 5, y - 5, 10, 10), Color.Red);
+            if (Game1.DebugInfo)
+            {
+                sb.Draw(Resources.Pixel, new Rectangle(x - 5, y - 5, 10, 10), Color.Red);
+            }
         }
     }
 }

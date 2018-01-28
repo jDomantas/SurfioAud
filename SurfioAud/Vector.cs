@@ -45,6 +45,8 @@ namespace SurfioAud
 
         public double Dot(Vector other) => X * other.X + Y * other.Y;
 
+        public double Cross(Vector other) => X * other.Y - Y * other.X;
+
         public Vector2 ToVector2 => new Vector2((float)X, (float)Y);
 
         public static Vector Zero => new Vector(0, 0);

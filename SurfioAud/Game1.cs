@@ -1,13 +1,17 @@
 ﻿using Microsoft.Xna.Framework;  
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SurfioAud.Geometry;
 using SurfioAud.Waves;
 using System;
+using System.Collections.Generic;
 
 namespace SurfioAud
 {
     public class Game1 : Game
     {
+        public const bool DebugInfo = true;
+
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -18,7 +22,13 @@ namespace SurfioAud
         private RenderTarget2D _renderTarget;
         private RenderTarget2D _waveRenderTarget;
         private int _tick;
-        
+        private List<Obstacle> _obstacles;
+        private double _nextTopSlot;
+        private double _nextBotSlot;
+        private bool _forceTopLong;
+        private bool _forceBotLong;
+        private readonly Random _rnd = new Random(0);
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -66,6 +76,13 @@ namespace SurfioAud
                 x |= (int)bytes[i * 2 + 1] << 8;
                 _randomNumbers[i] = x % 2048;
             }
+
+            _obstacles = new List<Obstacle>();
+
+            _nextTopSlot = -500;
+            PlaceTop(true);
+            PlaceTop(true);
+            PlaceTop(true);
         }
         
         protected override void LoadContent()
@@ -90,8 +107,74 @@ namespace SurfioAud
             }
             Resources.Static.SetData(colors);
 
+
+
             _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             _waveRenderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+            
+            Resources.Obstacles.Add(new Obstacle(false, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle1"), new Polygon(
+                new Vector(23, 810 - 0),
+                new Vector(33, 810 - 462),
+                new Vector(161, 810 - 391),
+                new Vector(155, 810 - 122),
+                new Vector(180, 810 - 0)
+            )));
+            Resources.Obstacles.Add(new Obstacle(false, false, new Vector(0, 65), Content.Load<Texture2D>("obstacle2"), new Polygon(
+                new Vector(422, 65 - 335),
+                new Vector(390, 65 - 14),
+                new Vector(333, 65 - 26),
+                new Vector(249, 65 - 178),
+                new Vector(102, 65 - 211),
+                new Vector(22, 65 - 335)
+            )));
+            Resources.Obstacles.Add(new Obstacle(false, false, new Vector(0, 258), Content.Load<Texture2D>("obstacle3"), new Polygon(
+                new Vector(355, 258 - 528),
+                new Vector(438, 258 - 19),
+                new Vector(160, 258 - 213),
+                new Vector(103, 258 - 224),
+                new Vector(98, 258 - 285),
+                new Vector(10, 258 - 528)
+            )));
+            Resources.Obstacles.Add(new Obstacle(false, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle4"), new Polygon(
+                new Vector(12, 810 - 0),
+                new Vector(20, 810 - 267),
+                new Vector(206, 810 - 326),
+                new Vector(517, 810 - 160),
+                new Vector(534, 810 - 241),
+                new Vector(580, 810 - 273),
+                new Vector(950, 810 - 194),
+                new Vector(1034, 810 - 0)
+            )));
+            Resources.Obstacles.Add(new Obstacle(false, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle5"), new Polygon(
+                new Vector(5, 810 - 0),
+                new Vector(78, 810 - 178),
+                new Vector(300, 810 - 163),
+                new Vector(304, 810 - 233),
+                new Vector(580, 810 - 390),
+                new Vector(600, 810 - 447),
+                new Vector(765, 810 - 380),
+                new Vector(793, 810 - 274),
+                new Vector(893, 810 - 134),
+                new Vector(978, 810 - 94),
+                new Vector(1006, 810 - 0)
+            )));
+            Resources.Obstacles.Add(new Obstacle(true, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle6"), new Polygon(
+                new Vector(26, 810 - 0),
+                new Vector(162, 810 - 52),
+                new Vector(279, 810 - 34),
+                new Vector(325, 810 - 63),
+                new Vector(372, 810 - 61),
+                new Vector(446, 810 - 37),
+                new Vector(526, 810 - 47),
+                new Vector(642, 810 - 27),
+                new Vector(696, 810 - 49),
+                new Vector(781, 810 - 23),
+                new Vector(927, 810 - 33),
+                new Vector(974, 810 - 52),
+                new Vector(1164, 810 - 14),
+                new Vector(1220, 810 - 15),
+                new Vector(1240, 810 - 0)
+            )));
         }
         
         protected override void Update(GameTime gameTime)
@@ -99,11 +182,25 @@ namespace SurfioAud
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (_nextTopSlot < _player.Position.X + 2300)
+            {
+                PlaceTop(false);
+            }
+
             _tick++;
 
             double dt = 1 / 90.0;
             _waves.Update(dt, _player.Position.X);
             _player.Update(dt, _waves);
+
+            for (int i = _obstacles.Count - 1; i >= 0; i--)
+            {
+                if (_obstacles[i].Right < _player.Position.X - 500)
+                {
+                    _obstacles[i] = _obstacles[_obstacles.Count - 1];
+                    _obstacles.RemoveAt(_obstacles.Count - 1);
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -112,7 +209,7 @@ namespace SurfioAud
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            Vector camera = new Vector(_player.Position.X - 250, 1080 * 0.75);
+            Vector camera = new Vector(_player.Position.X - 250, 810);
 
             GraphicsDevice.SetRenderTarget(_waveRenderTarget);
             GraphicsDevice.Clear(new Color(0, 0, 0, 0));
@@ -130,7 +227,10 @@ namespace SurfioAud
             _spriteBatch.Begin();
             _spriteBatch.Draw(_renderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
             _spriteBatch.Draw(_waveRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White * 0.3f);
-            Microphone.DrawDebugInfo(_spriteBatch);
+            if (DebugInfo)
+            {
+                Microphone.DrawDebugInfo(_spriteBatch);
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -139,7 +239,10 @@ namespace SurfioAud
         private void DrawGame(Vector camera)
         {
             DrawBackground(camera);
-            // DrawWaves(camera);
+            for (int i = 0; i < _obstacles.Count; i++)
+            {
+                _obstacles[i].Draw(_spriteBatch, camera);
+            }
             _player.Draw(_spriteBatch, camera);
         }
 
@@ -176,15 +279,48 @@ namespace SurfioAud
             var color = new Color(a, a, a);
             _spriteBatch.Draw(Resources.Paralax2, new Rectangle(x, 0, 1920 * 2, 1080), color);
             _spriteBatch.Draw(Resources.Paralax2, new Rectangle(x - 1920 * 2, 0, 1920 * 2, 1080), color);
+        }
 
-            double first = Math.Floor(camera.X / 300) - 1;
-            for (int i = 0; i < 10; i++)
+        private void PlaceTop(bool placeLong)
+        {
+            if (_forceTopLong)
             {
-                Vector pos = new Vector((first + i) * 300, 400);
-                pos -= camera;
-                x = (int)Math.Round(pos.X);
-                int y = (int)Math.Round(pos.Y);
-                _spriteBatch.Draw(Resources.Pixel, new Rectangle(x - 10, -(y - 10), 20, 20), Color.Black);
+                _forceTopLong = false;
+                placeLong = true;
+            }
+            int good = 0;
+            for (int i = 0; i < Resources.Obstacles.Count; i++)
+            {
+                if (Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
+                {
+                    good++;
+                }
+            }
+
+            if (good == 0)
+            {
+                throw new Exception("no good obstacles");
+            }
+
+            good = _rnd.Next(good);
+            for (int i = 0; i < Resources.Obstacles.Count; i++)
+            {
+                if (Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
+                {
+                    if (good-- == 0)
+                    {
+                        var ob = Resources.Obstacles[i];
+                        if (!ob.IsLong)
+                        {
+                            _forceTopLong = true;
+                        }
+                        Vector offset = new Vector(_nextTopSlot - ob.Left - (1 + _rnd.NextDouble()) * 100, 0);
+                        ob = new Obstacle(ob, offset);
+                        _nextTopSlot = ob.Right;
+                        _obstacles.Add(ob);
+                        return;
+                    }
+                }
             }
         }
     }
