@@ -344,7 +344,7 @@ namespace SurfioAud
             _spriteBatch.Draw(_waveRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White * 0.3f);
             _spriteBatch.End();
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _spriteBatch.DrawString(Resources.Font, Math.Round(_player.Position.X / 50, 0).ToString(CultureInfo.InvariantCulture), new Vector2(10, 10), Color.White);
+            _spriteBatch.DrawString(Resources.Font, "Bytes transferred: " + Math.Round(_player.Position.X / 50, 0).ToString(CultureInfo.InvariantCulture), new Vector2(20, 10), Color.White);
             if (DebugInfo)
             {
                 Microphone.DrawDebugInfo(_spriteBatch);
