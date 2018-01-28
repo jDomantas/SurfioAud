@@ -6,6 +6,7 @@ using SurfioAud.Waves;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace SurfioAud
 {
@@ -66,7 +67,7 @@ namespace SurfioAud
             {
                 int x = 0;
                 x |= bytes[i * 2];
-                x |= (int)bytes[i * 2 + 1] << 8;
+                x |= bytes[i * 2 + 1] << 8;
                 _randomNumbers[i] = x % 2048;
             }
 
@@ -289,7 +290,7 @@ namespace SurfioAud
             
             _tick++;
 
-            double dt = 1 / 90.0;
+            const double dt = 1 / 90.0;
             _waves.Update(dt, _player.Position.X);
             _player.Update(dt, _waves);
 
@@ -306,14 +307,10 @@ namespace SurfioAud
             {
                 var center = _player.CollisionCenter;
                 var radius = _player.CollisionRadius;
-                for (int i = 0; i < _obstacles.Count; i++)
+                if (_obstacles.Any(obstacle => obstacle.IntersectsCircle(center, radius)))
                 {
-                    if (_obstacles[i].IntersectsCircle(center, radius))
-                    {
-                        _deathTimer = 1;
-                        _player.Kill();
-                        break;
-                    }
+                    _deathTimer = 1;
+                    _player.Kill();
                 }
             }
 
@@ -365,9 +362,9 @@ namespace SurfioAud
         private void DrawGame(Vector camera)
         {
             DrawBackground(camera);
-            for (int i = 0; i < _obstacles.Count; i++)
+            foreach (Obstacle obstacle in _obstacles)
             {
-                _obstacles[i].Draw(_spriteBatch, camera);
+                obstacle.Draw(_spriteBatch, camera);
             }
             _player.Draw(_spriteBatch, camera);
         }
@@ -401,18 +398,18 @@ namespace SurfioAud
         {
             _spriteBatch.Draw(Resources.Background, Vector2.Zero, Color.White);
 
-            const double ParalaxSpeed1 = 0.15;
-            double pt = -ParalaxSpeed1 * camera.X;
+            const double paralaxSpeed1 = 0.15;
+            double pt = -paralaxSpeed1 * camera.X;
             pt = (pt % (1920 * 4) + (1920 * 4)) % (1920 * 4);
             int x = (int)Math.Round(pt);
             _spriteBatch.Draw(Resources.Paralax1, new Rectangle(x, 0, 1920 * 4, 1080), Color.White);
             _spriteBatch.Draw(Resources.Paralax1, new Rectangle(x - 1920 * 4, 0, 1920 * 4, 1080), Color.White);
 
-            const double ParalaxSpeed2 = 0.4;
-            pt = -ParalaxSpeed2 * camera.X;
+            const double paralaxSpeed2 = 0.4;
+            pt = -paralaxSpeed2 * camera.X;
             pt = (pt % (1920 * 2) + (1920 * 2)) % (1920 * 2);
             x = (int)Math.Round(pt);
-            int a = 200;
+            const int a = 200;
             var color = new Color(a, a, a);
             _spriteBatch.Draw(Resources.Paralax2, new Rectangle(x, 0, 1920 * 2, 1080), color);
             _spriteBatch.Draw(Resources.Paralax2, new Rectangle(x - 1920 * 2, 0, 1920 * 2, 1080), color);
@@ -425,14 +422,7 @@ namespace SurfioAud
                 _forceTopLong = false;
                 placeLong = true;
             }
-            int good = 0;
-            for (int i = 0; i < Resources.Obstacles.Count; i++)
-            {
-                if (Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
-                {
-                    good++;
-                }
-            }
+            int good = Resources.Obstacles.Count(obs => obs.IsTop && (!placeLong || obs.IsLong));
 
             if (good == 0)
             {
@@ -440,24 +430,21 @@ namespace SurfioAud
             }
 
             good = _rnd.Next(good);
-            for (int i = 0; i < Resources.Obstacles.Count; i++)
+            foreach (Obstacle obstacle in Resources.Obstacles)
             {
-                if (Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
+                if (!obstacle.IsTop || (placeLong && !obstacle.IsLong)) continue;
+                if (good-- != 0) continue;
+
+                var ob = obstacle;
+                if (!ob.IsLong)
                 {
-                    if (good-- == 0)
-                    {
-                        var ob = Resources.Obstacles[i];
-                        if (!ob.IsLong)
-                        {
-                            _forceTopLong = true;
-                        }
-                        Vector offset = new Vector(_nextTopSlot - ob.Left - (1 + _rnd.NextDouble()) * 50, 0);
-                        ob = new Obstacle(ob, offset);
-                        _nextTopSlot = ob.Right;
-                        _obstacles.Add(ob);
-                        return;
-                    }
+                    _forceTopLong = true;
                 }
+                Vector offset = new Vector(_nextTopSlot - ob.Left - (1 + _rnd.NextDouble()) * 50, 0);
+                ob = new Obstacle(ob, offset);
+                _nextTopSlot = ob.Right;
+                _obstacles.Add(ob);
+                return;
             }
         }
 
@@ -468,14 +455,7 @@ namespace SurfioAud
                 _forceBotLong = false;
                 placeLong = true;
             }
-            int good = 0;
-            for (int i = 0; i < Resources.Obstacles.Count; i++)
-            {
-                if (!Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
-                {
-                    good++;
-                }
-            }
+            int good = Resources.Obstacles.Count(obs => obs.IsTop && (!placeLong || obs.IsLong));
 
             if (good == 0)
             {
@@ -483,24 +463,21 @@ namespace SurfioAud
             }
 
             good = _rnd.Next(good);
-            for (int i = 0; i < Resources.Obstacles.Count; i++)
+            foreach (Obstacle obstacle in Resources.Obstacles)
             {
-                if (!Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
+                if (obstacle.IsTop || (placeLong && !obstacle.IsLong)) continue;
+                if (good-- != 0) continue;
+
+                var ob = obstacle;
+                if (!ob.IsLong)
                 {
-                    if (good-- == 0)
-                    {
-                        var ob = Resources.Obstacles[i];
-                        if (!ob.IsLong)
-                        {
-                            _forceBotLong = true;
-                        }
-                        Vector offset = new Vector(_nextBotSlot - ob.Left - (1 + _rnd.NextDouble()) * 50, 0);
-                        ob = new Obstacle(ob, offset);
-                        _nextBotSlot = ob.Right;
-                        _obstacles.Add(ob);
-                        return;
-                    }
+                    _forceBotLong = true;
                 }
+                Vector offset = new Vector(_nextBotSlot - ob.Left - (1 + _rnd.NextDouble()) * 50, 0);
+                ob = new Obstacle(ob, offset);
+                _nextBotSlot = ob.Right;
+                _obstacles.Add(ob);
+                return;
             }
         }
 

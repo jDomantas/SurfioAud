@@ -25,7 +25,7 @@ namespace SurfioAud
         private double _blinkTimer;
         private double _deathTime;
 
-        private readonly static Random _rnd = new Random();
+        private static readonly Random Rnd = new Random();
 
         public double CollisionRadius => 52 + (11 + Math.Min(0, _currentFrame)) * 0.92;
         public Vector CollisionCenter => _position + new Vector(0, (15 + Math.Min(0, _currentFrame)) * 3);
@@ -41,7 +41,7 @@ namespace SurfioAud
             _snapped = true;
             _alive = true;
 
-            _blinkTimer = -(_rnd.NextDouble() + 1) * 1;
+            _blinkTimer = -(Rnd.NextDouble() + 1) * 1;
         }
 
         public void Update(double dt, IWave wave)
@@ -57,13 +57,13 @@ namespace SurfioAud
                 _blinkTimer -= dt;
                 if (_blinkTimer <= 0)
                 {
-                    if (_rnd.Next(5) == 0)
+                    if (Rnd.Next(5) == 0)
                     {
                         _blinkTimer = -0.3;
                     }
                     else
                     {
-                        _blinkTimer = -(_rnd.NextDouble() + 0.5) * 3;
+                        _blinkTimer = -(Rnd.NextDouble() + 0.5) * 3;
                     }
                 }
             }

@@ -13,7 +13,7 @@ namespace SurfioAud
         private int _readPosition;
         private int _writePosition;
         private bool _startedWriting;
-        private float[] _infoRead;
+        private readonly float[] _infoRead;
         private int _infoNextPos;
 
         public Microphone()
