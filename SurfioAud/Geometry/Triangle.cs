@@ -46,7 +46,7 @@ namespace SurfioAud.Geometry
 
         private bool CircleLine(Vector a, Vector b, Vector c, double r)
         {
-            double d = (b - a).Dot(c - a) / (b - a).Length;
+            double d = (b - a).Dot(c - a) / (b - a).LengthSquared;
             if (d < 0) d = 0;
             if (d > 1) d = 1;
             return (c - (a + (b - a) * d)).LengthSquared <= r * r;

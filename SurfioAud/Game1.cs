@@ -10,7 +10,7 @@ namespace SurfioAud
 {
     public class Game1 : Game
     {
-        public const bool DebugInfo = true;
+        public const bool DebugInfo = false;
 
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -27,6 +27,7 @@ namespace SurfioAud
         private double _nextBotSlot;
         private bool _forceTopLong;
         private bool _forceBotLong;
+        private int _deathTimer;
         private readonly Random _rnd = new Random(0);
 
         public Game1()
@@ -55,16 +56,7 @@ namespace SurfioAud
                 _graphics.PreferredBackBufferHeight = 1080 * 2 / 3;
             }
             _graphics.ApplyChanges();
-            IsMouseVisible = true;
-
-            _waves = new ExpandedWave(new ScaledWave(new CompositeWave(
-                new ScaledWave(new MovingWave(new SinWave(200), 100), 0.1),
-                new ScaledWave(new MovingWave(new SinWave(100), -25), 0.05),
-                new MovingWave(new ScaledWave(new SimulatedWave(), 0.1), 100),
-                new SmoothedWave(new MovingWave(new Microwave(), 350), 30)
-            ), 100), 2);
-
-            _player = new Player(new Vector(0, 0));
+            IsMouseVisible = !_graphics.IsFullScreen;
 
             var gen = System.Security.Cryptography.RandomNumberGenerator.Create();
             var bytes = new byte[_randomNumbers.Length * 2];
@@ -79,10 +71,7 @@ namespace SurfioAud
 
             _obstacles = new List<Obstacle>();
 
-            _nextTopSlot = -500;
-            PlaceTop(true);
-            PlaceTop(true);
-            PlaceTop(true);
+            ResetGame();
         }
         
         protected override void LoadContent()
@@ -107,7 +96,30 @@ namespace SurfioAud
             }
             Resources.Static.SetData(colors);
 
-
+            Resources.Circle = new Texture2D(GraphicsDevice, 200, 200);
+            colors = new Color[Resources.Circle.Width * Resources.Circle.Height];
+            int r = Resources.Circle.Width / 2 - 2;
+            for (int x = 0; x < Resources.Circle.Width; x++)
+            {
+                for (int y = 0; y < Resources.Circle.Height; y++)
+                {
+                    double dx = (Resources.Circle.Width - 1) / 2.0 - x;
+                    double dy = (Resources.Circle.Height - 1) / 2.0 - y;
+                    double dist = Math.Abs(r - Math.Sqrt(dx * dx + dy * dy));
+                    double k;
+                    if (dist >= 2)
+                    {
+                        k = 0;
+                    }
+                    else
+                    {
+                        dist = 6 - 6 * dist;
+                        k = Math.Exp(dist) / (Math.Exp(dist) + 1);
+                    }
+                    colors[x + y * Resources.Circle.Width] = Color.White * (float)k;
+                }
+            }
+            Resources.Circle.SetData(colors);
 
             _renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             _waveRenderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
@@ -187,6 +199,15 @@ namespace SurfioAud
                 PlaceTop(false);
             }
 
+            if (_deathTimer > 0)
+            {
+                _deathTimer++;
+                if (_deathTimer > 90)
+                {
+                    ResetGame();
+                }
+            }
+            
             _tick++;
 
             double dt = 1 / 90.0;
@@ -199,6 +220,21 @@ namespace SurfioAud
                 {
                     _obstacles[i] = _obstacles[_obstacles.Count - 1];
                     _obstacles.RemoveAt(_obstacles.Count - 1);
+                }
+            }
+
+            if (_deathTimer == 0)
+            {
+                var center = _player.CollisionCenter;
+                var radius = _player.CollisionRadius;
+                for (int i = 0; i < _obstacles.Count; i++)
+                {
+                    if (_obstacles[i].IntersectsCircle(center, radius))
+                    {
+                        _deathTimer = 1;
+                        _player.Kill();
+                        break;
+                    }
                 }
             }
 
@@ -322,6 +358,27 @@ namespace SurfioAud
                     }
                 }
             }
+        }
+
+        private void ResetGame()
+        {
+            _obstacles.Clear();
+
+            _nextTopSlot = -500;
+            _nextBotSlot = -500;
+            _forceTopLong = false;
+            _forceBotLong = false;
+            _deathTimer = 0;
+            for (int i = 0; i < 3; i++) PlaceTop(true);
+
+            _player = new Player(new Vector(0, 0));
+
+            _waves = new ExpandedWave(new ScaledWave(new CompositeWave(
+                new ScaledWave(new MovingWave(new SinWave(200), 100), 0.1),
+                new ScaledWave(new MovingWave(new SinWave(100), -25), 0.05),
+                new MovingWave(new ScaledWave(new SimulatedWave(), 0.1), 100),
+                new SmoothedWave(new MovingWave(new Microwave(), 350), 30)
+            ), 100), 2);
         }
     }
 }

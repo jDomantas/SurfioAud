@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SurfioAud.Waves;
 using System;
 
@@ -19,6 +20,10 @@ namespace SurfioAud
         private bool _wasInWater;
         private bool _snapped;
         private double _keepSnap;
+        private bool _alive;
+
+        public double CollisionRadius => 52 + (11 + Math.Min(0, _currentFrame)) * 0.92;
+        public Vector CollisionCenter => _position + new Vector(0, (15 + Math.Min(0, _currentFrame)) * 3);
 
         public Player(Vector position)
         {
@@ -29,10 +34,16 @@ namespace SurfioAud
             _frameTimeLeft = 0;
             _wasInWater = false;
             _snapped = true;
+            _alive = true;
         }
 
         public void Update(double dt, IWave wave)
         {
+            if (!_alive)
+            {
+                return;
+            }
+
             double prev = wave.GetHeight(_position.X - HalfInterval);
             double next = wave.GetHeight(_position.X + HalfInterval);
             double water = wave.GetHeight(_position.X);
@@ -136,9 +147,9 @@ namespace SurfioAud
             {
                 _velocity.X = 0;
             }
-            
-            _position += _velocity * dt;
 
+            _position += _velocity * dt;
+            
             int targetFrame = Math.Min(15, Math.Max(-15, (int)Math.Round(_angle * 15 * 1.2)));
             if (!_snapped)
             {
@@ -172,10 +183,22 @@ namespace SurfioAud
                     _currentFrame++;
                 }
             }
+
+            // _currentFrame = -11;
+        }
+
+        public void Kill()
+        {
+            _alive = false;
         }
 
         public void Draw(SpriteBatch sb, Vector camera)
         {
+            if (!_alive)
+            {
+                return;
+            }
+
             Vector screenPos = Position - camera;
             int x = (int)Math.Round(screenPos.X);
             int y = (int)Math.Round(-screenPos.Y);
@@ -204,6 +227,9 @@ namespace SurfioAud
             if (Game1.DebugInfo)
             {
                 sb.Draw(Resources.Pixel, new Rectangle(x - 5, y - 5, 10, 10), Color.Red);
+                x = (int)Math.Round(CollisionCenter.X - camera.X);
+                y = (int)Math.Round(camera.Y - CollisionCenter.Y);
+                sb.Draw(Resources.Circle, new Rectangle(x - (int)CollisionRadius, y - (int)CollisionRadius, 2 * (int)CollisionRadius, 2 * (int)CollisionRadius), Color.Red);
             }
         }
     }
