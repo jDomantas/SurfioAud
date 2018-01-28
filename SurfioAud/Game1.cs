@@ -80,9 +80,18 @@ namespace SurfioAud
 
             Resources.Pixel = new Texture2D(GraphicsDevice, 1, 1);
             Resources.Pixel.SetData(new[] { Color.White });
-            Resources.Player = Content.Load<Texture2D>("sprit");
-            Resources.PlayerForward = Content.Load<Texture2D>("fwdspritesheet");
-            Resources.PlayerBackward = Content.Load<Texture2D>("revspritesheet");
+            Resources.Player[0] = Content.Load<Texture2D>("idle");
+            Resources.Player[1] = Content.Load<Texture2D>("idleb1");
+            Resources.Player[2] = Content.Load<Texture2D>("idleb2");
+            Resources.Player[3] = Content.Load<Texture2D>("idleb3");
+            Resources.PlayerForward[0] = Content.Load<Texture2D>("fwd");
+            Resources.PlayerForward[1] = Content.Load<Texture2D>("fwdb1");
+            Resources.PlayerForward[2] = Content.Load<Texture2D>("fwdb2");
+            Resources.PlayerForward[3] = Content.Load<Texture2D>("fwdb3");
+            Resources.PlayerBackward[0] = Content.Load<Texture2D>("rev");
+            Resources.PlayerBackward[1] = Content.Load<Texture2D>("revb1");
+            Resources.PlayerBackward[2] = Content.Load<Texture2D>("revb2");
+            Resources.PlayerBackward[3] = Content.Load<Texture2D>("revb3");
             Resources.Background = Content.Load<Texture2D>("background");
             Resources.Paralax1 = Content.Load<Texture2D>("parralax1");
             Resources.Paralax2 = Content.Load<Texture2D>("parrrlalal_2");
@@ -351,6 +360,7 @@ namespace SurfioAud
 
         private void DrawWaves(Vector camera)
         {
+            double prevHeight = 0;
             for (int i = 0; i < 1920 / 2; i++)
             {
                 double wave = _waves.GetHeight(camera.X + i * 2);
@@ -360,6 +370,16 @@ namespace SurfioAud
                 int texH = (1080 - h + 1) / 2;
 
                 _spriteBatch.Draw(Resources.Static, new Rectangle(i * 2, h, 2, texH * 2), new Rectangle(0, startH, 1, texH), Color.White);
+
+                if (i > 0)
+                {
+                    double from = Math.Max(wave, prevHeight), to = Math.Min(wave, prevHeight);
+                    freeSpace = camera.Y - from;
+                    h = (int)Math.Round(freeSpace);
+                    int colH = (int)Math.Round(from - to);
+                    _spriteBatch.Draw(Resources.Pixel, new Rectangle(i * 2 - 1, h - 1, 4, colH + 4), Color.Black);
+                    prevHeight = wave;
+                }
             }
         }
 

@@ -22,6 +22,9 @@ namespace SurfioAud
         private double _keepSnap;
         private bool _alive;
         private double _wobbleTimer;
+        private double _blinkTimer;
+
+        private readonly static Random _rnd = new Random();
 
         public double CollisionRadius => 52 + (11 + Math.Min(0, _currentFrame)) * 0.92;
         public Vector CollisionCenter => _position + new Vector(0, (15 + Math.Min(0, _currentFrame)) * 3);
@@ -36,6 +39,8 @@ namespace SurfioAud
             _wasInWater = false;
             _snapped = true;
             _alive = true;
+
+            _blinkTimer = -(_rnd.NextDouble() + 1) * 1;
         }
 
         public void Update(double dt, IWave wave)
@@ -43,6 +48,30 @@ namespace SurfioAud
             if (!_alive)
             {
                 return;
+            }
+
+            if (_blinkTimer > 0)
+            {
+                _blinkTimer -= dt;
+                if (_blinkTimer <= 0)
+                {
+                    if (_rnd.Next(5) == 0)
+                    {
+                        _blinkTimer = -0.3;
+                    }
+                    else
+                    {
+                        _blinkTimer = -(_rnd.NextDouble() + 0.5) * 3;
+                    }
+                }
+            }
+            else
+            {
+                _blinkTimer += dt;
+                if (_blinkTimer >= 0)
+                {
+                    _blinkTimer = 0.02 * 5;
+                }
             }
 
             double prev = wave.GetHeight(_position.X - HalfInterval);
@@ -211,23 +240,31 @@ namespace SurfioAud
             //sb.Draw(Resources.Pixel, new Rectangle(x - 10, y - 10, 20, 20), Color.Black);
             int sx, sy;
             Texture2D tex;
+            int subtex = 0;
+            if (_blinkTimer > 0)
+            {
+                subtex = (int)Math.Floor(_blinkTimer / 0.02);
+                subtex = Math.Min(4, Math.Max(0, subtex));
+                if (subtex > 2) subtex = 2 - (subtex - 2);
+                subtex++;
+            }
             if (_currentFrame == 0)
             {
                 sx = 0;
                 sy = 0;
-                tex = Resources.Player;
+                tex = Resources.Player[subtex];
             }
             else if (_currentFrame > 0)
             {
                 sx = 250 * (_currentFrame % 4);
                 sy = 250 * (_currentFrame / 4);
-                tex = Resources.PlayerBackward;
+                tex = Resources.PlayerBackward[subtex];
             }
             else
             {
                 sx = 250 * (-_currentFrame % 4);
                 sy = 250 * (-_currentFrame / 4);
-                tex = Resources.PlayerForward;
+                tex = Resources.PlayerForward[subtex];
             }
             sb.Draw(tex, new Rectangle(x, y, 250, 250), new Rectangle(sx, sy, 250, 250), Color.White, (float)_angle, new Vector2(125, 185), SpriteEffects.None, 0);
             if (Game1.DebugInfo)
