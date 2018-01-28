@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;  
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SurfioAud.Geometry;
@@ -45,7 +46,7 @@ namespace SurfioAud
         {
             base.Initialize();
 
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             if (_graphics.IsFullScreen)
             {
                 _graphics.PreferredBackBufferWidth = 1920;
@@ -98,6 +99,7 @@ namespace SurfioAud
             Resources.Paralax1 = Content.Load<Texture2D>("parralax1");
             Resources.Paralax2 = Content.Load<Texture2D>("parrrlalal_2");
             Resources.Font = Content.Load<SpriteFont>("Fyodor");
+            Resources.StaticNoise = Content.Load<SoundEffect>("666");
 
             Resources.Static = new Texture2D(GraphicsDevice, 1, 4096);
             var colors = new Color[Resources.Static.Height];
@@ -278,12 +280,21 @@ namespace SurfioAud
                 PlaceBot(false);
             }
 
+            if (_tick == 10)
+            {
+                Resources.StaticNoise.Play();
+            }
+
             if (_deathTimer > 0)
             {
                 _deathTimer++;
                 if (_deathTimer > 100)
                 {
                     ResetGame();
+                }
+                else if (_deathTimer == 60)
+                {
+                    Resources.StaticNoise.Play();
                 }
             }
             

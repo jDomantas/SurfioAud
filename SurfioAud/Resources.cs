@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace SurfioAud
@@ -19,5 +20,7 @@ namespace SurfioAud
         public static List<Obstacle> Obstacles = new List<Obstacle>();
 
         public static SpriteFont Font;
+
+        public static SoundEffect StaticNoise;
     }
 }
