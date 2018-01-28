@@ -23,6 +23,7 @@ namespace SurfioAud
         private bool _alive;
         private double _wobbleTimer;
         private double _blinkTimer;
+        private double _idleThingTimer;
         private double _deathTime;
 
         private static readonly Random Rnd = new Random();
@@ -40,8 +41,9 @@ namespace SurfioAud
             _wasInWater = false;
             _snapped = true;
             _alive = true;
-
+            
             _blinkTimer = -(Rnd.NextDouble() + 1) * 1;
+            _idleThingTimer = -2;
         }
 
         public void Update(double dt, IWave wave)
@@ -50,6 +52,27 @@ namespace SurfioAud
             {
                 _deathTime += dt;
                 return;
+            }
+
+            if (_idleThingTimer > 0)
+            {
+                _idleThingTimer -= dt;
+                if (_idleThingTimer <= 0)
+                {
+                    _idleThingTimer = -(Rnd.NextDouble() + 0.5) * 4;
+                }
+            }
+            else
+            {
+                if (_currentFrame != 0)
+                {
+                    _idleThingTimer = -Math.Max(3, -_idleThingTimer);
+                }
+                _idleThingTimer += dt;
+                if (_idleThingTimer >= 0)
+                {
+                    _idleThingTimer = 2;
+                }
             }
 
             if (_blinkTimer > 0)
@@ -250,6 +273,21 @@ namespace SurfioAud
                 sx = 0;
                 sy = 0;
                 tex = Resources.Player[subtex];
+
+                if (_idleThingTimer > 0)
+                {
+                    int part = (int)Math.Floor(_idleThingTimer / 0.2);
+                    if (part < 0) part = 0;
+                    if (part > 9) part = 9;
+                    int frame = 0;
+                    if (part == 0) frame = 1;
+                    else if (part == 1) frame = 2;
+                    else if (part >= 2 && part <= 7) frame = 3;
+                    else if (part == 8) frame = 2;
+                    else frame = 1;
+                    sx = 250 * (frame % 2);
+                    sy = 250 * (frame / 2);
+                }
             }
             else if (_currentFrame > 0)
             {
