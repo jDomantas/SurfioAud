@@ -337,3 +337,10 @@
 /processorParam:TextureFormat=Color
 /build:fwdb3.png
 
+#begin Fyodor.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fyodor.spritefont
+

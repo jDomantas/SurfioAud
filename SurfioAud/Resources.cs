@@ -16,5 +16,7 @@ namespace SurfioAud
         public static Texture2D Static;
 
         public static List<Obstacle> Obstacles = new List<Obstacle>();
+
+        public static SpriteFont Font;
     }
 }
