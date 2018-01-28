@@ -278,7 +278,7 @@ namespace SurfioAud
             if (_deathTimer > 0)
             {
                 _deathTimer++;
-                if (_deathTimer > 90)
+                if (_deathTimer > 100)
                 {
                     ResetGame();
                 }
@@ -339,9 +339,19 @@ namespace SurfioAud
             _spriteBatch.Begin();
             _spriteBatch.Draw(_renderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
             _spriteBatch.Draw(_waveRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White * 0.3f);
+            _spriteBatch.End();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             if (DebugInfo)
             {
                 Microphone.DrawDebugInfo(_spriteBatch);
+            }
+            if (_deathTimer > 60)
+            {
+                for (int i = 0; i < 1920 / 2; i++)
+                {
+                    int startH = _randomNumbers[(_tick * 1920 + i) % _randomNumbers.Length];
+                    _spriteBatch.Draw(Resources.Static, new Rectangle(i * 2, 0, 2, 1080), new Rectangle(0, startH, 1, 1080 / 2), Color.White);
+                }
             }
             _spriteBatch.End();
 
