@@ -15,7 +15,6 @@ namespace SurfioAud.Geometry
             _triangles = new List<Triangle>();
             var pts = points.ToList();
 
-            // very stupid triangulation algorithm
             while (pts.Count >= 3)
             {
                 for (int i = 0; i < pts.Count; i++)
