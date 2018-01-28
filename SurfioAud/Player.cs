@@ -23,6 +23,7 @@ namespace SurfioAud
         private bool _alive;
         private double _wobbleTimer;
         private double _blinkTimer;
+        private double _deathTime;
 
         private readonly static Random _rnd = new Random();
 
@@ -47,6 +48,7 @@ namespace SurfioAud
         {
             if (!_alive)
             {
+                _deathTime += dt;
                 return;
             }
 
@@ -229,11 +231,6 @@ namespace SurfioAud
 
         public void Draw(SpriteBatch sb, Vector camera)
         {
-            if (!_alive)
-            {
-                return;
-            }
-
             Vector screenPos = Position - camera;
             int x = (int)Math.Round(screenPos.X);
             int y = (int)Math.Round(-screenPos.Y);
@@ -265,6 +262,14 @@ namespace SurfioAud
                 sx = 250 * (-_currentFrame % 4);
                 sy = 250 * (-_currentFrame / 4);
                 tex = Resources.PlayerForward[subtex];
+            }
+            if (!_alive)
+            {
+                int frame = (int)Math.Floor(_deathTime / 0.04);
+                if (frame >= 8) return;
+                tex = Resources.PlayerDeath;
+                sx = frame % 4 * 250;
+                sy = frame / 4 * 250;
             }
             sb.Draw(tex, new Rectangle(x, y, 250, 250), new Rectangle(sx, sy, 250, 250), Color.White, (float)_angle, new Vector2(125, 185), SpriteEffects.None, 0);
             if (Game1.DebugInfo)

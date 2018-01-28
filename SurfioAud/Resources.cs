@@ -10,6 +10,7 @@ namespace SurfioAud
         public static Texture2D[] Player = new Texture2D[4];
         public static Texture2D[] PlayerForward = new Texture2D[4];
         public static Texture2D[] PlayerBackward = new Texture2D[4];
+        public static Texture2D PlayerDeath;
         public static Texture2D Background;
         public static Texture2D Paralax1;
         public static Texture2D Paralax2;

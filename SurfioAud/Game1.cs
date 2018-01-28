@@ -93,6 +93,7 @@ namespace SurfioAud
             Resources.PlayerBackward[1] = Content.Load<Texture2D>("revb1");
             Resources.PlayerBackward[2] = Content.Load<Texture2D>("revb2");
             Resources.PlayerBackward[3] = Content.Load<Texture2D>("revb3");
+            Resources.PlayerDeath = Content.Load<Texture2D>("deth");
             Resources.Background = Content.Load<Texture2D>("background");
             Resources.Paralax1 = Content.Load<Texture2D>("parralax1");
             Resources.Paralax2 = Content.Load<Texture2D>("parrrlalal_2");
