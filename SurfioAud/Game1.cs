@@ -44,7 +44,7 @@ namespace SurfioAud
         {
             base.Initialize();
 
-            _graphics.IsFullScreen = false;
+            _graphics.IsFullScreen = true;
             if (_graphics.IsFullScreen)
             {
                 _graphics.PreferredBackBufferWidth = 1920;
@@ -139,13 +139,13 @@ namespace SurfioAud
                 new Vector(102, 65 - 211),
                 new Vector(22, 65 - 335)
             )));
-            Resources.Obstacles.Add(new Obstacle(false, false, new Vector(0, 258), Content.Load<Texture2D>("obstacle3"), new Polygon(
-                new Vector(355, 258 - 528),
-                new Vector(438, 258 - 19),
-                new Vector(160, 258 - 213),
-                new Vector(103, 258 - 224),
-                new Vector(98, 258 - 285),
-                new Vector(10, 258 - 528)
+            Resources.Obstacles.Add(new Obstacle(false, false, new Vector(0, 258 - 100), Content.Load<Texture2D>("obstacle3"), new Polygon(
+                new Vector(355, 258 - 528 - 100),
+                new Vector(438, 258 - 19 - 100),
+                new Vector(160, 258 - 213 - 100),
+                new Vector(103, 258 - 224 - 100),
+                new Vector(98, 258 - 285 - 100),
+                new Vector(10, 258 - 528 - 100)
             )));
             Resources.Obstacles.Add(new Obstacle(false, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle4"), new Polygon(
                 new Vector(12, 810 - 0),
@@ -171,22 +171,85 @@ namespace SurfioAud
                 new Vector(1006, 810 - 0)
             )));
             Resources.Obstacles.Add(new Obstacle(true, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle6"), new Polygon(
-                new Vector(26, 810 - 0),
-                new Vector(162, 810 - 52),
-                new Vector(279, 810 - 34),
-                new Vector(325, 810 - 63),
-                new Vector(372, 810 - 61),
-                new Vector(446, 810 - 37),
-                new Vector(526, 810 - 47),
-                new Vector(642, 810 - 27),
-                new Vector(696, 810 - 49),
-                new Vector(781, 810 - 23),
-                new Vector(927, 810 - 33),
-                new Vector(974, 810 - 52),
-                new Vector(1164, 810 - 14),
-                new Vector(1220, 810 - 15),
-                new Vector(1240, 810 - 0)
+                new Vector(2, 810 - 0),
+                new Vector(17, 810 - 32),
+                new Vector(239, 810 - 62),
+                new Vector(468, 810 - 33),
+                new Vector(633, 810 - 25),
+                new Vector(668, 810 - 0)
             )));
+            Resources.Obstacles.Add(new Obstacle(true, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle7"), new Polygon(
+                new Vector(13, 810 - 0),
+                new Vector(22, 810 - 26),
+                new Vector(268, 810 - 33),
+                new Vector(658, 810 - 95),
+                new Vector(673, 810 - 138),
+                new Vector(780, 810 - 42),
+                new Vector(905, 810 - 77),
+                new Vector(1000, 810 - 6),
+                new Vector(1050, 810 - 30),
+                new Vector(1065, 810 - 0)
+            )));
+            Resources.Obstacles.Add(new Obstacle(true, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle8"), new Polygon(
+                new Vector(6, 810 - 0),
+                new Vector(18, 810 - 30),
+                new Vector(438, 810 - 52),
+                new Vector(584, 810 - 76),
+                new Vector(741, 810 - 64),
+                new Vector(1000, 810 - 19),
+                new Vector(1214, 810 - 8),
+                new Vector(1224, 810 - 0)
+            )));
+            Resources.Obstacles.Add(new Obstacle(true, true, new Vector(0, 810), Content.Load<Texture2D>("obstacle9"), new Polygon(
+                new Vector(8, 810 - 0),
+                new Vector(99, 810 - 46),
+                new Vector(128, 810 - 81),
+                new Vector(202, 810 - 56),
+                new Vector(538, 810 - 59),
+                new Vector(609, 810 - 40),
+                new Vector(654, 810 - 45),
+                new Vector(807, 810 - 0)
+            )));
+            Resources.Obstacles.Add(new Obstacle(true, false, new Vector(0, -201), Content.Load<Texture2D>("obstacle6"), new Polygon(
+                new Vector(668, -270 + 0),
+                new Vector(633, -270 + 25),
+                new Vector(468, -270 + 33),
+                new Vector(239, -270 + 62),
+                new Vector(17, -270 + 32),
+                new Vector(2, -270 + 0)
+            )).VFlipped());
+            Resources.Obstacles.Add(new Obstacle(true, false, new Vector(0, -124), Content.Load<Texture2D>("obstacle7"), new Polygon(
+                new Vector(1065, -270 + 0),
+                new Vector(1050, -270 + 30),
+                new Vector(1000, -270 + 6),
+                new Vector(905, -270 + 77),
+                new Vector(780, -270 + 42),
+                new Vector(673, -270 + 138),
+                new Vector(658, -270 + 95),
+                new Vector(268, -270 + 33),
+                new Vector(22, -270 + 26),
+                new Vector(13, -270 + 0)
+            )).VFlipped());
+            Resources.Obstacles.Add(new Obstacle(true, false, new Vector(0, -174), Content.Load<Texture2D>("obstacle8"), new Polygon(
+                new Vector(1224, -270 + 0),
+                new Vector(1214, -270 + 8),
+                new Vector(1000, -270 + 19),
+                new Vector(741, -270 + 64),
+                new Vector(584, -270 + 76),
+                new Vector(438, -270 + 52),
+                new Vector(18, -270 + 30),
+                new Vector(6, -270 + 0)
+            )).VFlipped());
+            Resources.Obstacles.Add(new Obstacle(true, false, new Vector(0, -170), Content.Load<Texture2D>("obstacle9"), new Polygon(
+                new Vector(807, -270 + 0),
+                new Vector(654, -270 + 45),
+                new Vector(609, -270 + 40),
+                new Vector(538, -270 + 59),
+                new Vector(202, -270 + 56),
+                new Vector(128, -270 + 81),
+                new Vector(99, -270 + 46),
+                new Vector(8, -270 + 0)
+            )).VFlipped());
         }
         
         protected override void Update(GameTime gameTime)
@@ -194,9 +257,13 @@ namespace SurfioAud
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (_nextTopSlot < _player.Position.X + 2300)
+            while (_nextTopSlot < _player.Position.X + 2300)
             {
                 PlaceTop(false);
+            }
+            while (_nextBotSlot < _player.Position.X + 2300)
+            {
+                PlaceBot(false);
             }
 
             if (_deathTimer > 0)
@@ -350,9 +417,52 @@ namespace SurfioAud
                         {
                             _forceTopLong = true;
                         }
-                        Vector offset = new Vector(_nextTopSlot - ob.Left - (1 + _rnd.NextDouble()) * 100, 0);
+                        Vector offset = new Vector(_nextTopSlot - ob.Left - (1 + _rnd.NextDouble()) * 50, 0);
                         ob = new Obstacle(ob, offset);
                         _nextTopSlot = ob.Right;
+                        _obstacles.Add(ob);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void PlaceBot(bool placeLong)
+        {
+            if (_forceBotLong)
+            {
+                _forceBotLong = false;
+                placeLong = true;
+            }
+            int good = 0;
+            for (int i = 0; i < Resources.Obstacles.Count; i++)
+            {
+                if (!Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
+                {
+                    good++;
+                }
+            }
+
+            if (good == 0)
+            {
+                throw new Exception("no good obstacles");
+            }
+
+            good = _rnd.Next(good);
+            for (int i = 0; i < Resources.Obstacles.Count; i++)
+            {
+                if (!Resources.Obstacles[i].IsTop && (!placeLong || Resources.Obstacles[i].IsLong))
+                {
+                    if (good-- == 0)
+                    {
+                        var ob = Resources.Obstacles[i];
+                        if (!ob.IsLong)
+                        {
+                            _forceBotLong = true;
+                        }
+                        Vector offset = new Vector(_nextBotSlot - ob.Left - (1 + _rnd.NextDouble()) * 50, 0);
+                        ob = new Obstacle(ob, offset);
+                        _nextBotSlot = ob.Right;
                         _obstacles.Add(ob);
                         return;
                     }
@@ -369,7 +479,11 @@ namespace SurfioAud
             _forceTopLong = false;
             _forceBotLong = false;
             _deathTimer = 0;
-            for (int i = 0; i < 3; i++) PlaceTop(true);
+            for (int i = 0; i < 3; i++)
+            {
+                PlaceTop(true);
+                PlaceBot(true);
+            }
 
             _player = new Player(new Vector(0, 0));
 

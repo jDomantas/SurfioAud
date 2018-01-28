@@ -21,6 +21,7 @@ namespace SurfioAud
         private bool _snapped;
         private double _keepSnap;
         private bool _alive;
+        private double _wobbleTimer;
 
         public double CollisionRadius => 52 + (11 + Math.Min(0, _currentFrame)) * 0.92;
         public Vector CollisionCenter => _position + new Vector(0, (15 + Math.Min(0, _currentFrame)) * 3);
@@ -53,19 +54,24 @@ namespace SurfioAud
             if (!_snapped)
             {
                 double rot = dt * 3;
-                if (_angle < -rot)
+                if (_angle < -rot && _wobbleTimer <= 0)
                 {
                     _angle += rot;
                 }
-                else if (_angle > rot)
+                else if (_angle > rot && _wobbleTimer <= 0)
                 {
                     _angle -= rot;
                 }
                 else
                 {
-                    _angle = 0;
+                    _wobbleTimer += dt * 13;
+                    _angle = Math.Sin(_wobbleTimer) * 0.16;
                 }
-            } 
+            }
+            else
+            {
+                _wobbleTimer = 0;
+            }
 
             if (_keepSnap >= 0)
             {

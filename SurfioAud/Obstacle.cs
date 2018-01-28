@@ -16,6 +16,8 @@ namespace SurfioAud
         public bool IsLong { get; }
         public bool IsTop { get; }
 
+        private bool _vflip;
+
         public Obstacle(bool isLong, bool isTop, Vector offset, Texture2D texture, Polygon collisionBox)
         {
             IsLong = isLong;
@@ -23,6 +25,7 @@ namespace SurfioAud
             _textureOffset = offset;
             _texture = texture;
             _collisionBox = collisionBox;
+            _vflip = false;
         }
 
         public Obstacle(Obstacle from, Vector offset)
@@ -32,6 +35,13 @@ namespace SurfioAud
             _textureOffset = from._textureOffset + offset;
             _texture = from._texture;
             _collisionBox = new Polygon(from._collisionBox, offset);
+            _vflip = from._vflip;
+        }
+
+        public Obstacle VFlipped()
+        {
+            _vflip = true;
+            return this;
         }
 
         public bool IntersectsCircle(Vector center, double radius)
@@ -43,7 +53,7 @@ namespace SurfioAud
         {
             int x = (int)Math.Round(_textureOffset.X - camera.X);
             int y = (int)Math.Round(camera.Y - _textureOffset.Y);
-            sb.Draw(_texture, new Vector2(x, y), Color.White);
+            sb.Draw(_texture, new Rectangle(x, y, _texture.Width, _texture.Height), null, Color.White, 0, Vector2.Zero, _vflip ? SpriteEffects.FlipVertically : SpriteEffects.None, 0);
             if (Game1.DebugInfo)
             {
                 _collisionBox.DrawDebug(sb, camera);
